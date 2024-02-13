@@ -1,14 +1,42 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_borders/gradient_borders.dart';
+import 'package:social_media_app/helper/helpers.dart';
 import '../components/textfield.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  final void Function()? onClickedOnSignUpHere;
+
+  const LoginPage({super.key, required this.onClickedOnSignUpHere});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController(),
       passwordController = TextEditingController();
 
-  final void Function()? onClickedOnSignUpHere;
+  void loginUser() async {
+    showDialog(
+      context: context,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
 
-  LoginPage({super.key, required this.onClickedOnSignUpHere});
+    try {
+      FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: emailController.text, password: passwordController.text);
+
+      if (context.mounted) {
+        Navigator.pop(context);
+      }
+    } on FirebaseAuthException catch (e) {
+      Navigator.pop(context);
+      displayMessageToUser("Failed to login firebase user: $e.code", context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +90,7 @@ class LoginPage extends StatelessWidget {
                 shadowColor: Colors.black,
                 elevation: 6,
                 child: GestureDetector(
-                  onTap: () => {print("Pressed button!")},
+                  onTap: loginUser,
                   child: Container(
                     width: 175,
                     height: 50,
@@ -84,7 +112,7 @@ class LoginPage extends StatelessWidget {
                 children: [
                   const Text("Don't have an account?"),
                   GestureDetector(
-                    onTap: onClickedOnSignUpHere,
+                    onTap: widget.onClickedOnSignUpHere,
                     child: const Text(
                       " Sign Up here.",
                       style: TextStyle(fontWeight: FontWeight.bold),

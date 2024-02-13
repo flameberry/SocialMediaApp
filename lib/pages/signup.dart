@@ -1,16 +1,54 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_borders/gradient_borders.dart';
+import 'package:social_media_app/helper/helpers.dart';
 import '../components/textfield.dart';
 
-class SignUpPage extends StatelessWidget {
+class SignUpPage extends StatefulWidget {
+  final void Function()? onClickedOnLoginHere;
+
+  const SignUpPage({super.key, required this.onClickedOnLoginHere});
+
+  @override
+  State<SignUpPage> createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController emailController = TextEditingController(),
       usernameController = TextEditingController(),
       confirmPasswordController = TextEditingController(),
       passwordController = TextEditingController();
 
-  final void Function()? onClickedOnLoginHere;
+  void signUpUser() async {
+    showDialog(
+      context: context,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
 
-  SignUpPage({super.key, required this.onClickedOnLoginHere});
+    if (passwordController.text != confirmPasswordController.text) {
+      Navigator.pop(context);
+
+      displayMessageToUser(
+          "Password and Confirm Password must be the same!", context);
+    } else {
+      try {
+        // Create the user
+        UserCredential? credential =
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text,
+        );
+
+        Navigator.pop(context);
+      } on FirebaseAuthException catch (e) {
+        Navigator.pop(context);
+        displayMessageToUser(
+            "Failed to create firebase user: $e.code", context);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +112,7 @@ class SignUpPage extends StatelessWidget {
                 shadowColor: Colors.black,
                 elevation: 6,
                 child: GestureDetector(
-                  onTap: () => {print("Pressed button!")},
+                  onTap: signUpUser,
                   child: Container(
                     width: 175,
                     height: 50,
@@ -96,7 +134,7 @@ class SignUpPage extends StatelessWidget {
                 children: [
                   const Text("Already have an account?"),
                   GestureDetector(
-                    onTap: onClickedOnLoginHere,
+                    onTap: widget.onClickedOnLoginHere,
                     child: const Text(
                       " Login here.",
                       style: TextStyle(fontWeight: FontWeight.bold),
