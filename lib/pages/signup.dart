@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_borders/gradient_borders.dart';
@@ -41,12 +42,30 @@ class _SignUpPageState extends State<SignUpPage> {
           password: passwordController.text,
         );
 
-        Navigator.pop(context);
+        createUserDocument(credential);
+
+        if (context.mounted) Navigator.pop(context);
       } on FirebaseAuthException catch (e) {
         Navigator.pop(context);
         displayMessageToUser(
             "Failed to create firebase user: $e.code", context);
       }
+    }
+  }
+
+  Future<void> createUserDocument(UserCredential? userCredential) async {
+    if (userCredential != null && userCredential.user != null) {
+      await FirebaseFirestore.instance
+          .collection("Users")
+          .doc(userCredential.user!.email)
+          .set({
+        'id': userCredential.user!.uid,
+        'email': userCredential.user!.email,
+        'name': 'Aditya Gaikwad',
+        'username': usernameController.text,
+        'following': [],
+        'followers': []
+      });
     }
   }
 

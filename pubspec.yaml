@@ -38,6 +38,10 @@ dependencies:
   gradient_borders: ^1.0.0
   firebase_core: ^2.25.4
   firebase_auth: ^4.17.4
+  cloud_firestore: ^4.15.4
+  sliding_up_panel: ^2.0.0+1
+  firebase_storage: ^11.6.6
+  image_picker: ^1.0.7
 
 dev_dependencies:
   flutter_test:
@@ -95,4 +99,8 @@ flutter:
   - family: Imperial Script
     fonts:
       - asset: assets/fonts/ImperialScript/ImperialScript-Regular.ttf
+  
+  - family: Inter
+    fonts:
+      - asset: assets/fonts/Inter/Inter-VariableFont_slnt,wght.ttf
 

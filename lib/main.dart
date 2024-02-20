@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:social_media_app/auth/auth.dart';
+import 'package:social_media_app/auth/login-signup.dart';
+import 'package:social_media_app/pages/home.dart';
+import 'package:social_media_app/pages/profile.dart';
 import 'firebase_options.dart';
 import 'theme/light.dart';
 import 'theme/dark.dart';
@@ -21,11 +24,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Social Media App',
       debugShowCheckedModeBanner: false,
       theme: lightTheme,
       darkTheme: darkTheme,
       home: const AuthPage(),
+      routes: {
+        '/login_signup': (context) => const LoginOrSignUp(),
+        '/home': (context) => const Home(),
+        '/profile': (context) => const ProfilePage(),
+      },
     );
   }
 }

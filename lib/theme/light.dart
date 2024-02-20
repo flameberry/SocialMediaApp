@@ -5,5 +5,6 @@ ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
     background: Colors.white,
     primary: Colors.amberAccent,
+    inversePrimary: Colors.amber,
   ),
 );

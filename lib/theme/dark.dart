@@ -5,5 +5,6 @@ ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
     background: Colors.black12,
     primary: Colors.deepOrangeAccent,
+    inversePrimary: Colors.deepOrange,
   ),
 );
