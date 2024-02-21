@@ -23,8 +23,9 @@ class _PostScreenState extends State<PostScreen> {
   Future<void> postThreadMessage(String username) async {
     try {
       if (messageController.text.isNotEmpty) {
-        await FirebaseFirestore.instance.collection('threads').add({
+        await FirebaseFirestore.instance.collection('Jokes').add({
           'id': currentUser!.uid,
+          'email': currentUser!.email,
           'sender': username,
           'message': messageController.text,
           'timestamp': FieldValue.serverTimestamp(),
@@ -40,8 +41,8 @@ class _PostScreenState extends State<PostScreen> {
   Future<UserModel> fetchUserData() async {
     try {
       final userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(currentUser!.uid)
+          .collection('Users')
+          .doc(currentUser!.email)
           .get();
       final user = UserModel.fromMap(userDoc.data() as Map<String, dynamic>);
 
@@ -128,7 +129,7 @@ class _PostScreenState extends State<PostScreen> {
                             TextFormField(
                               controller: messageController,
                               decoration: const InputDecoration(
-                                hintText: 'Start a thread...',
+                                hintText: 'Start a Joke thread...',
                                 hintStyle: TextStyle(fontSize: 14),
                                 border: InputBorder.none,
                               ),

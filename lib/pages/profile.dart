@@ -23,7 +23,7 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:social_media_app/model/joke.dart';
 import 'package:social_media_app/model/user.dart';
 import 'package:social_media_app/pages/edit_profile.dart';
-import 'package:social_media_app/components/thread_message.dart';
+import 'package:social_media_app/components/joke_message.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -59,6 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
         final timestamp = (messageData['timestamp'] as Timestamp).toDate();
         return Joke(
           id: doc.id,
+          email: messageData['email'],
           senderName: messageData['sender'],
           senderProfileImageUrl: user.profileImageUrl ??
               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRz8cLf8-P2P8GZ0-KiQ-OXpZQ4bebpa3K3Dw&usqp=CAU',
@@ -220,6 +221,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         final messageData = userThread[index];
                                         final message = Joke(
                                             id: messageData.id,
+                                            email: messageData.email,
                                             senderName: messageData.senderName,
                                             senderProfileImageUrl: user
                                                     .profileImageUrl ??
@@ -228,7 +230,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                             timestamp: messageData.timestamp,
                                             likes: messageData.likes,
                                             comments: messageData.comments);
-                                        return ThreadMessageWidget(
+                                        return JokeMessageWidget(
                                           message: message,
                                           onDisLike: () => dislikeThreadMessage(
                                               userThread[index].id),
@@ -273,7 +275,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> likeThreadMessage(String id) async {
     try {
       threadCollection.doc(id).update({
-        'likes': FieldValue.arrayUnion([currentUser!.uid])
+        'likes': FieldValue.arrayUnion([currentUser!.email])
       });
     } catch (e) {
       debugPrint(e.toString());
@@ -283,7 +285,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> dislikeThreadMessage(String id) async {
     try {
       threadCollection.doc(id).update({
-        'likes': FieldValue.arrayRemove([currentUser!.uid])
+        'likes': FieldValue.arrayRemove([currentUser!.email])
       });
     } catch (e) {
       debugPrint(e.toString());

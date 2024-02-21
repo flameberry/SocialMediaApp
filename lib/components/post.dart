@@ -23,10 +23,19 @@ class FBYPost extends StatelessWidget {
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                username,
-                style:
-                    const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+              Row(
+                children: [
+                  Text(
+                    username,
+                    style: const TextStyle(
+                        fontSize: 17, fontWeight: FontWeight.bold),
+                  ),
+                  const Spacer(),
+                  const Text(
+                    "7hr ago",
+                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
+                  )
+                ],
               ),
               Text(
                 content,

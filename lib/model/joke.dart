@@ -3,6 +3,7 @@ import 'dart:convert';
 
 class Joke {
   final String id;
+  final String email;
   final String senderName;
   final String senderProfileImageUrl;
   final String message;
@@ -12,6 +13,7 @@ class Joke {
 
   Joke({
     required this.id,
+    required this.email,
     required this.senderName,
     required this.senderProfileImageUrl,
     required this.message,
@@ -23,6 +25,7 @@ class Joke {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
+      'email': email,
       'senderName': senderName,
       'senderProfileImageUrl': senderProfileImageUrl,
       'message': message,
@@ -35,6 +38,7 @@ class Joke {
   factory Joke.fromMap(Map<String, dynamic> map) {
     return Joke(
       id: map['id'] as String,
+      email: map['email'] as String,
       senderName: map['senderName'] as String,
       senderProfileImageUrl: map['senderProfileImageUrl'] as String,
       message: map['message'] as String,
@@ -52,6 +56,7 @@ class Joke {
   factory Joke.empty() {
     return Joke(
         id: '',
+        email: '',
         senderName: '',
         senderProfileImageUrl: '',
         message: '',

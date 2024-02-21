@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:social_media_app/model/joke.dart';
 
-class ThreadMessageWidget extends StatelessWidget {
-  ThreadMessageWidget({
+class JokeMessageWidget extends StatelessWidget {
+  JokeMessageWidget({
     super.key,
     required this.message,
     required this.onLike,
@@ -19,7 +19,7 @@ class ThreadMessageWidget extends StatelessWidget {
   final void Function() onComment;
 
   final PanelController panelController;
-  final userId = FirebaseAuth.instance.currentUser!.uid;
+  final userId = FirebaseAuth.instance.currentUser!.email;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -105,7 +105,7 @@ class ThreadMessageWidget extends StatelessWidget {
                               IconButton(
                                 onPressed: () {},
                                 icon: Image.asset(
-                                  'assets/retweet.png',
+                                  "assets/images/retweet.png",
                                   width: 25,
                                 ),
                               ),
@@ -117,7 +117,7 @@ class ThreadMessageWidget extends StatelessWidget {
                               IconButton(
                                 onPressed: () {},
                                 icon: Image.asset(
-                                  'assets/send.png',
+                                  "assets/images/send.png",
                                   width: 25,
                                 ),
                               ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:social_media_app/components/drawer.dart';
 import 'package:social_media_app/components/post.dart';
 import 'package:social_media_app/pages/post.dart';
 import 'package:social_media_app/pages/profile.dart';
@@ -50,7 +49,7 @@ class _HomeState extends State<Home> {
     pages = [
       const HomePage(),
       const Placeholder(),
-      // PostScreen(panelController: panelController),
+      PostScreen(panelController: panelController),
       // const FavoriteScreen(),
       const ProfilePage(),
     ];
@@ -60,12 +59,6 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text("Home"),
-      //   backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      //   actions: const [],
-      // ),
-      drawer: const FBYDrawer(),
       body: SlidingUpPanel(
         controller: panelController,
         minHeight: 0,
@@ -80,15 +73,23 @@ class _HomeState extends State<Home> {
         body: pages[selectedIndex],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         currentIndex: selectedIndex,
         onTap: (value) {
           setState(() {
-            selectedIndex = value;
+            if (value == 2) {
+              panelController.isPanelOpen
+                  ? panelController.close()
+                  : panelController.open();
+            } else {
+              selectedIndex = value;
+            }
           });
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Feed'),
           BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
+          BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Joke'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
       ),
