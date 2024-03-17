@@ -44,7 +44,7 @@ class _PostCommentScreenState extends State<PostCommentScreen> {
       final senderData = senderDoc.data() as Map<String, dynamic>;
       final senderName = senderData['sender'] as String;
       final message = senderData['message'] as String;
-      final id = senderData['id'] as String;
+      final id = senderData['email'] as String;
 
       final userDoc = await userCollection.doc(id).get();
       final userData = userDoc.data() as Map<String, dynamic>;
@@ -70,7 +70,7 @@ class _PostCommentScreenState extends State<PostCommentScreen> {
       await threadCollection.doc(widget.threadDoc).update({
         'comments': FieldValue.arrayUnion([
           {
-            'id': currentUser!.uid,
+            'id': currentUser!.email,
             'text': commentController.text,
             'time': Timestamp.now().toDate()
           }

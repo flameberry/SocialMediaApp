@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:social_media_app/components/fbypost.dart';
 import 'package:social_media_app/model/joke.dart';
 import 'package:social_media_app/pages/comment_screen.dart';
 import 'package:social_media_app/pages/post_comment_screen.dart';
-import 'package:social_media_app/components/joke_message.dart';
 
 class FeedScreen extends StatefulWidget {
   const FeedScreen({super.key});
@@ -16,12 +16,12 @@ class FeedScreen extends StatefulWidget {
 
 class _FeedScreenState extends State<FeedScreen> {
   final CollectionReference threadCollection =
-      FirebaseFirestore.instance.collection('threads');
+      FirebaseFirestore.instance.collection('Jokes');
 
   final CollectionReference userCollection =
-      FirebaseFirestore.instance.collection('users');
+      FirebaseFirestore.instance.collection('Users');
 
-  final userId = FirebaseAuth.instance.currentUser!.uid;
+  final userId = FirebaseAuth.instance.currentUser!.email;
 
   Future<String> getSenderImageUrl(String id) async {
     final userDoc = await userCollection.doc(id).get();
@@ -60,7 +60,7 @@ class _FeedScreenState extends State<FeedScreen> {
                 children: [
                   Center(
                     child: Image.asset(
-                      "assets/thread_logo.png",
+                      "assets/images/logo.png",
                       width: 30,
                     ),
                   ),
@@ -95,7 +95,7 @@ class _FeedScreenState extends State<FeedScreen> {
                             }
 
                             return FutureBuilder(
-                                future: getSenderImageUrl(messageData['id']),
+                                future: getSenderImageUrl(messageData['email']),
                                 builder: (context, snapshot) {
                                   if (!snapshot.hasData) {
                                     return const Text('');
@@ -112,31 +112,34 @@ class _FeedScreenState extends State<FeedScreen> {
                                     likes: messageData['likes'] ?? [],
                                     comments: messageData['comments'] ?? [],
                                   );
-                                  return InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => CommentScreen(
-                                            message: message,
-                                            panelController: panelController,
-                                            threadId: messages[index].id,
+                                  return Padding(
+                                    padding: const EdgeInsets.only(top: 12.0),
+                                    child: InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => CommentScreen(
+                                              message: message,
+                                              panelController: panelController,
+                                              threadId: messages[index].id,
+                                            ),
                                           ),
-                                        ),
-                                      );
-                                    },
-                                    child: JokeMessageWidget(
-                                      message: message,
-                                      onDisLike: () => dislikeThreadMessage(
-                                          messages[index].id),
-                                      onLike: () =>
-                                          likeThreadMessage(messages[index].id),
-                                      onComment: () {
-                                        setState(() {
-                                          threadDoc = messages[index].id;
-                                        });
+                                        );
                                       },
-                                      panelController: panelController,
+                                      child: FBYPost(
+                                        message: message,
+                                        onDisLike: () => dislikeThreadMessage(
+                                            messages[index].id),
+                                        onLike: () => likeThreadMessage(
+                                            messages[index].id),
+                                        onComment: () {
+                                          setState(() {
+                                            threadDoc = messages[index].id;
+                                          });
+                                        },
+                                        panelController: panelController,
+                                      ),
                                     ),
                                   );
                                 });

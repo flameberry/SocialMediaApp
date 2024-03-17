@@ -18,7 +18,8 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController emailController = TextEditingController(),
       usernameController = TextEditingController(),
       confirmPasswordController = TextEditingController(),
-      passwordController = TextEditingController();
+      passwordController = TextEditingController(),
+      nameController = TextEditingController();
 
   void signUpUser() async {
     showDialog(
@@ -61,7 +62,7 @@ class _SignUpPageState extends State<SignUpPage> {
           .set({
         'id': userCredential.user!.uid,
         'email': userCredential.user!.email,
-        'name': 'Aditya Gaikwad',
+        'name': nameController.text,
         'username': usernameController.text,
         'following': [],
         'followers': []
@@ -82,7 +83,7 @@ class _SignUpPageState extends State<SignUpPage> {
               // Flameberry Logo
               Image.asset(
                 "assets/images/logo.png",
-                scale: 1.8,
+                scale: 2,
               ),
               // Flameberry Text
               const Text(
@@ -92,7 +93,14 @@ class _SignUpPageState extends State<SignUpPage> {
 
               const SizedBox(height: 10.0),
 
-              // Email Text Field
+              FBYTextField(
+                placeholder: "Full Name",
+                obscureText: false,
+                editingController: nameController,
+              ),
+
+              const SizedBox(height: 20.0),
+
               FBYTextField(
                 placeholder: "Username",
                 obscureText: false,
@@ -101,6 +109,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
               const SizedBox(height: 20.0),
 
+              // Email Text Field
               FBYTextField(
                 placeholder: "Email",
                 obscureText: false,

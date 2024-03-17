@@ -1,35 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:social_media_app/components/post.dart';
+import 'package:social_media_app/components/fbypost.dart';
+import 'package:social_media_app/pages/feed.dart';
 import 'package:social_media_app/pages/post.dart';
 import 'package:social_media_app/pages/profile.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+// class HomePage extends StatelessWidget {
+//   const HomePage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(25.0),
-      child: ListView(
-        children: const [
-          FBYPost(
-            username: "Aditya Gaikwad",
-            content:
-                "Singing in the shower is fun until you get soap in your mouth. Then it's a soap opera.",
-          ),
-          SizedBox(
-            height: 12,
-          ),
-          FBYPost(
-            username: "Aaryan Mahadik",
-            content: "I wanna kick baby Yoda in the ribs!",
-          ),
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.all(25.0),
+//       child: ListView(
+//         children: const [
+//           FBYPost(),
+//           SizedBox(
+//             height: 12,
+//           ),
+//           FBYPost(
+//             username: "Aaryan Mahadik",
+//             content: "I wanna kick baby Yoda in the ribs!",
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -47,7 +44,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     pages = [
-      const HomePage(),
+      const FeedScreen(),
       const Placeholder(),
       PostScreen(panelController: panelController),
       // const FavoriteScreen(),

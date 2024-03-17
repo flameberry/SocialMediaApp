@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/src/panel.dart';
+import 'package:social_media_app/components/fbypost.dart';
 import 'package:social_media_app/model/joke.dart';
 import 'package:social_media_app/model/user.dart';
 import 'package:social_media_app/components/joke_message.dart';
@@ -40,7 +41,7 @@ class _CommentScreenState extends State<CommentScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: const Text(
-          'Thread',
+          'Joke',
           style: TextStyle(color: Colors.black),
         ),
         elevation: 0,
@@ -50,12 +51,34 @@ class _CommentScreenState extends State<CommentScreen> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              JokeMessageWidget(
+              FBYPost(
                 message: widget.message,
                 onLike: () {},
                 onDisLike: () {},
                 onComment: () {},
                 panelController: widget.panelController,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 1,
+                      color: Colors.black,
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
+                    ),
+                  ),
+                  const Text('Comments'),
+                  Expanded(
+                    child: Container(
+                      height: 1,
+                      color: Colors.black,
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
+                    ),
+                  ),
+                ],
               ),
               StreamBuilder(
                 stream: threadCollection.doc(widget.threadId).snapshots(),
@@ -67,7 +90,8 @@ class _CommentScreenState extends State<CommentScreen> {
                   final comments = data['comments'];
 
                   if (comments == null) {
-                    return const Text('');
+                    return const Text(
+                        'No comments yet. Be the first to comment!');
                   }
                   return ListView.builder(
                       shrinkWrap: true,
@@ -93,7 +117,7 @@ class _CommentScreenState extends State<CommentScreen> {
 
                               final message = Joke(
                                 id: comment['id'],
-                                email: comment['email'],
+                                email: user.email,
                                 senderName: user.name,
                                 senderProfileImageUrl:
                                     user.profileImageUrl ?? "",
@@ -103,12 +127,15 @@ class _CommentScreenState extends State<CommentScreen> {
                                 comments: [],
                               );
 
-                              return JokeMessageWidget(
-                                message: message,
-                                onLike: () {},
-                                onDisLike: () {},
-                                onComment: () {},
-                                panelController: widget.panelController,
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 12.0),
+                                child: FBYPost(
+                                  message: message,
+                                  onLike: () {},
+                                  onDisLike: () {},
+                                  onComment: () {},
+                                  panelController: widget.panelController,
+                                ),
                               );
                             });
                       });

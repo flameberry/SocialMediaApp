@@ -1,29 +1,11 @@
-// import 'package:flutter/material.dart';
-// import 'package:social_media_app/components/drawer.dart';
-
-// class ProfilePage extends StatelessWidget {
-//   const ProfilePage({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text("Profile"),
-//         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-//       ),
-//       drawer: const FBYDrawer(),
-//     );
-//   }
-// }
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:social_media_app/components/fbypost.dart';
 import 'package:social_media_app/model/joke.dart';
 import 'package:social_media_app/model/user.dart';
 import 'package:social_media_app/pages/edit_profile.dart';
-import 'package:social_media_app/components/joke_message.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -174,7 +156,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 },
                                 child: Container(
                                   alignment: Alignment.center,
-                                  width: 150,
+                                  width: 110,
                                   height: 30,
                                   decoration: BoxDecoration(
                                       border: Border.all(color: Colors.grey),
@@ -186,12 +168,26 @@ class _ProfilePageState extends State<ProfilePage> {
                                 onTap: () {},
                                 child: Container(
                                   alignment: Alignment.center,
-                                  width: 150,
+                                  width: 110,
                                   height: 30,
                                   decoration: BoxDecoration(
                                       border: Border.all(color: Colors.grey),
                                       borderRadius: BorderRadius.circular(8)),
                                   child: const Text('Share profile'),
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () async {
+                                  await FirebaseAuth.instance.signOut();
+                                },
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  width: 110,
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(8)),
+                                  child: const Text('Logout'),
                                 ),
                               ),
                             ],
@@ -230,14 +226,19 @@ class _ProfilePageState extends State<ProfilePage> {
                                             timestamp: messageData.timestamp,
                                             likes: messageData.likes,
                                             comments: messageData.comments);
-                                        return JokeMessageWidget(
-                                          message: message,
-                                          onDisLike: () => dislikeThreadMessage(
-                                              userThread[index].id),
-                                          onLike: () => likeThreadMessage(
-                                              userThread[index].id),
-                                          onComment: () {},
-                                          panelController: panelController,
+                                        return Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 12.0),
+                                          child: FBYPost(
+                                            message: message,
+                                            onDisLike: () =>
+                                                dislikeThreadMessage(
+                                                    userThread[index].id),
+                                            onLike: () => likeThreadMessage(
+                                                userThread[index].id),
+                                            onComment: () {},
+                                            panelController: panelController,
+                                          ),
                                         );
                                       },
                                     );
