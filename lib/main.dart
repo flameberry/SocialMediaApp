@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:social_media_app/auth/auth.dart';
@@ -32,7 +33,10 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login_signup': (context) => const LoginOrSignUp(),
         '/home': (context) => const Home(),
-        '/profile': (context) => const ProfilePage(),
+        '/profile': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map;
+          return ProfilePage(targetUserEmail: args['targetUserEmail']);
+        },
       },
     );
   }

@@ -8,8 +8,9 @@ import 'package:social_media_app/model/user.dart';
 import 'package:social_media_app/pages/edit_profile.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  const ProfilePage({super.key, required this.targetUserEmail});
 
+  final String? targetUserEmail;
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
@@ -21,11 +22,13 @@ class _ProfilePageState extends State<ProfilePage> {
       FirebaseFirestore.instance.collection('Jokes');
   PanelController panelController = PanelController();
 
+  bool isCurrentUser = false;
   bool isPanelOpen = false;
+
   Stream<UserModel> fetchUserData() {
     return FirebaseFirestore.instance
         .collection('Users')
-        .doc(currentUser!.email)
+        .doc(widget.targetUserEmail!)
         .snapshots()
         .map((doc) => UserModel.fromMap(doc.data() as Map<String, dynamic>));
   }
@@ -56,6 +59,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
+    isCurrentUser =
+        FirebaseAuth.instance.currentUser!.email == widget.targetUserEmail!;
     userStream = fetchUserData();
     super.initState();
   }
@@ -143,55 +148,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 15.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  if (isPanelOpen) {
-                                    panelController.close();
-                                  } else {
-                                    panelController.open();
-                                  }
-                                },
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  width: 110,
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.grey),
-                                      borderRadius: BorderRadius.circular(8)),
-                                  child: const Text('Edit profile'),
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () {},
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  width: 110,
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.grey),
-                                      borderRadius: BorderRadius.circular(8)),
-                                  child: const Text('Share profile'),
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () async {
-                                  await FirebaseAuth.instance.signOut();
-                                },
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  width: 110,
-                                  height: 30,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.grey),
-                                      borderRadius: BorderRadius.circular(8)),
-                                  child: const Text('Logout'),
-                                ),
-                              ),
-                            ],
-                          ),
+                          child: displayButtons(),
                         ),
                         const SizedBox(height: 25),
                         const TabBar(
@@ -276,7 +233,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> likeThreadMessage(String id) async {
     try {
       threadCollection.doc(id).update({
-        'likes': FieldValue.arrayUnion([currentUser!.email])
+        'likes': FieldValue.arrayUnion([widget.targetUserEmail!])
       });
     } catch (e) {
       debugPrint(e.toString());
@@ -286,10 +243,94 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> dislikeThreadMessage(String id) async {
     try {
       threadCollection.doc(id).update({
-        'likes': FieldValue.arrayRemove([currentUser!.email])
+        'likes': FieldValue.arrayRemove([widget.targetUserEmail!])
       });
     } catch (e) {
       debugPrint(e.toString());
+    }
+  }
+
+  Widget displayButtons() {
+    if (isCurrentUser) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          InkWell(
+            onTap: () {
+              if (isPanelOpen) {
+                panelController.close();
+              } else {
+                panelController.open();
+              }
+            },
+            child: Container(
+              alignment: Alignment.center,
+              width: 110,
+              height: 30,
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8)),
+              child: const Text('Edit profile'),
+            ),
+          ),
+          InkWell(
+            onTap: () {},
+            child: Container(
+              alignment: Alignment.center,
+              width: 110,
+              height: 30,
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8)),
+              child: const Text('Share profile'),
+            ),
+          ),
+          InkWell(
+            onTap: () async {
+              await FirebaseAuth.instance.signOut();
+            },
+            child: Container(
+              alignment: Alignment.center,
+              width: 110,
+              height: 30,
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8)),
+              child: const Text('Logout'),
+            ),
+          )
+        ],
+      );
+    } else {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          InkWell(
+            onTap: () {},
+            child: Container(
+              alignment: Alignment.center,
+              width: 170,
+              height: 30,
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8)),
+              child: const Text('Follow'),
+            ),
+          ),
+          InkWell(
+            onTap: () {},
+            child: Container(
+              alignment: Alignment.center,
+              width: 170,
+              height: 30,
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8)),
+              child: const Text('Message'),
+            ),
+          )
+        ],
+      );
     }
   }
 }

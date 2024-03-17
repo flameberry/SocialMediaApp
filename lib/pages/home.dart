@@ -1,32 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:social_media_app/components/fbypost.dart';
 import 'package:social_media_app/pages/feed.dart';
 import 'package:social_media_app/pages/post.dart';
 import 'package:social_media_app/pages/profile.dart';
-
-// class HomePage extends StatelessWidget {
-//   const HomePage({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Padding(
-//       padding: const EdgeInsets.all(25.0),
-//       child: ListView(
-//         children: const [
-//           FBYPost(),
-//           SizedBox(
-//             height: 12,
-//           ),
-//           FBYPost(
-//             username: "Aaryan Mahadik",
-//             content: "I wanna kick baby Yoda in the ribs!",
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
+import 'package:social_media_app/pages/search.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -45,10 +23,12 @@ class _HomeState extends State<Home> {
   void initState() {
     pages = [
       const FeedScreen(),
-      const Placeholder(),
+      const SearchScreen(),
       PostScreen(panelController: panelController),
       // const FavoriteScreen(),
-      const ProfilePage(),
+      ProfilePage(
+        targetUserEmail: FirebaseAuth.instance.currentUser!.email,
+      ),
     ];
     super.initState();
   }

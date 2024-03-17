@@ -25,129 +25,155 @@ class FBYPost extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: Colors.black, width: 2),
-      ),
-      padding: const EdgeInsets.all(0.0),
-      child: Material(
-        borderRadius: BorderRadius.circular(30),
-        elevation: 6.0,
-        shadowColor: Colors.black,
-        child: ListTile(
-          visualDensity: VisualDensity.compact,
-          leading: CircleAvatar(
-            backgroundImage: NetworkImage(message.senderProfileImageUrl),
-            backgroundColor: Colors.white,
+    return TweenAnimationBuilder(
+      tween: Tween<double>(begin: 0, end: 1),
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeIn,
+      builder: (context, value, child) {
+        return Opacity(
+          opacity: value,
+          child: Padding(
+            padding: EdgeInsets.only(top: 10 * (1.0 - value)),
+            child: child,
           ),
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    message.senderName,
-                    style: const TextStyle(
-                        fontSize: 17, fontWeight: FontWeight.bold),
-                  ),
-                  const Spacer(),
-                  Text(
-                    _getTimeDifference(message.timestamp),
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w400,
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          border: Border.all(color: Colors.black, width: 2),
+        ),
+        padding: const EdgeInsets.all(0.0),
+        child: Material(
+          borderRadius: BorderRadius.circular(30),
+          elevation: 6.0,
+          shadowColor: Colors.black,
+          child: ListTile(
+            visualDensity: VisualDensity.compact,
+            leading: CircleAvatar(
+              backgroundImage: NetworkImage(message.senderProfileImageUrl),
+              backgroundColor: Colors.white,
+            ),
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      message.senderName,
+                      style: const TextStyle(
+                          fontSize: 17, fontWeight: FontWeight.bold),
                     ),
+                    const Spacer(),
+                    Text(
+                      _getTimeDifference(message.timestamp),
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    )
+                  ],
+                ),
+                Text(
+                  message.message,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontFamily: "Inter",
+                    height: 1.2,
+                  ),
+                ),
+              ],
+            ),
+            subtitle: Padding(
+              padding: const EdgeInsets.only(top: 5),
+              child: Row(
+                children: [
+                  Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          if (message.likes.contains(userId)) {
+                            onDisLike();
+                          } else {
+                            onLike();
+                          }
+                        },
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 200),
+                          transitionBuilder:
+                              (Widget child, Animation<double> animation) {
+                            return ScaleTransition(
+                              scale: animation,
+                              child: child,
+                            );
+                          },
+                          child: message.likes.contains(userId)
+                              ? const Icon(
+                                  Icons.favorite,
+                                  color: Colors.red,
+                                  key: Key('like'),
+                                )
+                              : const Icon(
+                                  Icons.favorite_outline,
+                                  key: Key('unlike'),
+                                ),
+                        ),
+                      ),
+                      message.likes.isEmpty
+                          ? Container()
+                          : Text(message.likes.length.toString()),
+                    ],
+                  ),
+                  const SizedBox(width: 15),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          panelController.open();
+                          onComment();
+                        },
+                        child: const Icon(Icons.mode_comment_outlined),
+                      ),
+                      message.comments.isEmpty
+                          ? message.likes.isEmpty
+                              ? Container()
+                              : Text('')
+                          : Text(message.comments.length.toString()),
+                    ],
+                  ),
+                  const SizedBox(width: 15),
+                  Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {},
+                        child: Image.asset(
+                          "assets/images/retweet.png",
+                          width: 25,
+                        ),
+                      ),
+                      message.likes.isNotEmpty || message.comments.isNotEmpty
+                          ? const Text('')
+                          : Container(),
+                    ],
+                  ),
+                  const SizedBox(width: 15),
+                  Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {},
+                        child: Image.asset(
+                          "assets/images/send.png",
+                          width: 20,
+                        ),
+                      ),
+                      message.likes.isNotEmpty || message.comments.isNotEmpty
+                          ? const Text('')
+                          : Container(),
+                    ],
                   )
                 ],
               ),
-              Text(
-                message.message,
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontFamily: "Inter",
-                  height: 1.2,
-                ),
-              ),
-            ],
-          ),
-          subtitle: Padding(
-            padding: const EdgeInsets.only(top: 5),
-            child: Row(
-              children: [
-                Column(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        if (message.likes.contains(userId)) {
-                          onDisLike();
-                        } else {
-                          onLike();
-                        }
-                      },
-                      child: message.likes.contains(userId)
-                          ? const Icon(
-                              Icons.favorite,
-                              color: Colors.red,
-                            )
-                          : const Icon(
-                              Icons.favorite_outline,
-                            ),
-                    ),
-                    message.likes.isEmpty
-                        ? Container()
-                        : Text(message.likes.length.toString()),
-                  ],
-                ),
-                const SizedBox(width: 15),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        panelController.open();
-                        onComment();
-                      },
-                      child: const Icon(Icons.mode_comment_outlined),
-                    ),
-                    message.comments.isEmpty
-                        ? message.likes.isEmpty
-                            ? Container()
-                            : Text('')
-                        : Text(message.comments.length.toString()),
-                  ],
-                ),
-                const SizedBox(width: 15),
-                Column(
-                  children: [
-                    GestureDetector(
-                      onTap: () {},
-                      child: Image.asset(
-                        "assets/images/retweet.png",
-                        width: 25,
-                      ),
-                    ),
-                    message.likes.isNotEmpty || message.comments.isNotEmpty
-                        ? const Text('')
-                        : Container(),
-                  ],
-                ),
-                const SizedBox(width: 15),
-                Column(
-                  children: [
-                    GestureDetector(
-                      onTap: () {},
-                      child: Image.asset(
-                        "assets/images/send.png",
-                        width: 20,
-                      ),
-                    ),
-                    message.likes.isNotEmpty || message.comments.isNotEmpty
-                        ? const Text('')
-                        : Container(),
-                  ],
-                )
-              ],
             ),
           ),
         ),
