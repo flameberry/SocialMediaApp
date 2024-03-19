@@ -120,7 +120,9 @@ class FBYPost extends StatelessWidget {
                         ),
                       ),
                       message.likes.isEmpty
-                          ? Container()
+                          ? message.comments.isEmpty
+                              ? Container()
+                              : const Text('')
                           : Text(message.likes.length.toString()),
                     ],
                   ),
@@ -138,7 +140,7 @@ class FBYPost extends StatelessWidget {
                       message.comments.isEmpty
                           ? message.likes.isEmpty
                               ? Container()
-                              : Text('')
+                              : const Text('')
                           : Text(message.comments.length.toString()),
                     ],
                   ),

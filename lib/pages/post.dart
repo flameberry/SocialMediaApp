@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/src/panel.dart';
 import 'package:social_media_app/model/user.dart';
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 
 class PostScreen extends StatefulWidget {
   const PostScreen({
@@ -24,7 +24,7 @@ class _PostScreenState extends State<PostScreen> {
   final currentUser = FirebaseAuth.instance.currentUser;
   late Future<UserModel> fetchUser;
 
-  List<dynamic> suggestedJokes = [];
+  late Future<List<String>> suggestedJokes;
 
   Future<void> postThreadMessage(String username) async {
     try {
@@ -58,21 +58,36 @@ class _PostScreenState extends State<PostScreen> {
     }
   }
 
-  void fetchJokes() async {
-    // const url = 'https://us-central1-social-media-app-6b0e7.cloudfunctions.net/getJokes';
-    const url = 'https://icanhazdadjoke.com/search?limit=5';
-    final response = await get(Uri.parse(url));
-    final body = response.body;
-    final json = jsonDecode(body);
-    setState(() {
-      suggestedJokes = json['results'] as List;
-    });
+  // void fetchJokes() async {
+  //   // const url = 'https://us-central1-social-media-app-6b0e7.cloudfunctions.net/getJokes';
+  //   const url = 'https://icanhazdadjoke.com/search?limit=5';
+  //   final response = await http.get(Uri.parse(url));
+  //   final body = response.body;
+  //   final json = jsonDecode(body);
+  //   setState(() {
+  //     suggestedJokes = json['results'] as List;
+  //   });
+  // }
+
+  Future<List<String>> fetchJokesUsingAPI() async {
+    final response = await http
+        .get(Uri.parse('https://official-joke-api.appspot.com/random_ten'));
+
+    if (response.statusCode == 200) {
+      List jokes = json.decode(response.body);
+      return jokes
+          .take(5)
+          .map((joke) => "${joke['setup']} - ${joke['punchline']}")
+          .toList();
+    } else {
+      throw Exception('Failed to load jokes');
+    }
   }
 
   @override
   void initState() {
     fetchUser = fetchUserData();
-    // fetchJokes();
+    suggestedJokes = fetchJokesUsingAPI();
     super.initState();
   }
 
@@ -161,6 +176,47 @@ class _PostScreenState extends State<PostScreen> {
                           )
                         ],
                       ),
+                      FutureBuilder<List<String>>(
+                        future: suggestedJokes,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            return ListView.builder(
+                              shrinkWrap:
+                                  true, // this is needed to make ListView work inside a Column
+                              itemCount: snapshot.data!.length,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    messageController.text =
+                                        snapshot.data![index];
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(30),
+                                        border: Border.all(
+                                            color: Colors.black, width: 2),
+                                      ),
+                                      child: ListTile(
+                                        title: Text(snapshot.data![index]),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          }
+                        },
+                      ),
+                      const Text("Joke Suggestions",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold)),
                     ],
                   ),
                 )
