@@ -53,7 +53,7 @@ class _EditProfileState extends State<EditProfile> {
       final file = File(pickedFile.path);
       final storageRef = FirebaseStorage.instance
           .ref()
-          .child('profile_images/${currentUser!.uid}.jpg');
+          .child('profile_images/${currentUser!.email}.jpg');
       try {
         final upload = storageRef.putFile(file);
         final snaphot = await upload.whenComplete(() {});

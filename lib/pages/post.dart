@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/src/panel.dart';
 import 'package:social_media_app/model/user.dart';
+import 'package:http/http.dart';
 
 class PostScreen extends StatefulWidget {
   const PostScreen({
@@ -20,6 +23,9 @@ class _PostScreenState extends State<PostScreen> {
 
   final currentUser = FirebaseAuth.instance.currentUser;
   late Future<UserModel> fetchUser;
+
+  List<dynamic> suggestedJokes = [];
+
   Future<void> postThreadMessage(String username) async {
     try {
       if (messageController.text.isNotEmpty) {
@@ -52,9 +58,21 @@ class _PostScreenState extends State<PostScreen> {
     }
   }
 
+  void fetchJokes() async {
+    // const url = 'https://us-central1-social-media-app-6b0e7.cloudfunctions.net/getJokes';
+    const url = 'https://icanhazdadjoke.com/search?limit=5';
+    final response = await get(Uri.parse(url));
+    final body = response.body;
+    final json = jsonDecode(body);
+    setState(() {
+      suggestedJokes = json['results'] as List;
+    });
+  }
+
   @override
   void initState() {
     fetchUser = fetchUserData();
+    // fetchJokes();
     super.initState();
   }
 
@@ -106,39 +124,43 @@ class _PostScreenState extends State<PostScreen> {
                 const Divider(thickness: 1),
                 Padding(
                   padding: const EdgeInsets.only(top: 12.0),
-                  child: Row(
+                  child: Column(
                     children: [
-                      CircleAvatar(
-                        foregroundImage:
-                            NetworkImage(user?.profileImageUrl ?? ""),
-                        radius: 25,
-                      ),
-                      const SizedBox(
-                        width: 14,
-                      ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              user?.username ?? "",
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
+                      Row(
+                        children: [
+                          CircleAvatar(
+                            foregroundImage:
+                                NetworkImage(user?.profileImageUrl ?? ""),
+                            radius: 25,
+                          ),
+                          const SizedBox(
+                            width: 14,
+                          ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  user?.username ?? "",
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                TextFormField(
+                                  controller: messageController,
+                                  decoration: const InputDecoration(
+                                    hintText: 'Start a Joke thread...',
+                                    hintStyle: TextStyle(fontSize: 14),
+                                    border: InputBorder.none,
+                                  ),
+                                  maxLines: null,
+                                  style: const TextStyle(fontSize: 14),
+                                )
+                              ],
                             ),
-                            TextFormField(
-                              controller: messageController,
-                              decoration: const InputDecoration(
-                                hintText: 'Start a Joke thread...',
-                                hintStyle: TextStyle(fontSize: 14),
-                                border: InputBorder.none,
-                              ),
-                              maxLines: null,
-                              style: const TextStyle(fontSize: 14),
-                            )
-                          ],
-                        ),
-                      )
+                          )
+                        ],
+                      ),
                     ],
                   ),
                 )
