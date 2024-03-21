@@ -110,13 +110,26 @@ class _ProfilePageState extends State<ProfilePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ListTile(
-                          title: Text(user?.name ?? ""),
-                          subtitle: Text('@${user?.username ?? ""}'),
+                          title: Row(
+                            children: [
+                              Text(user?.name ?? ""),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              user!.role == "Premium"
+                                  ? const Icon(
+                                      Icons.verified,
+                                      color: Colors.blue,
+                                    )
+                                  : Container(),
+                            ],
+                          ),
+                          subtitle: Text('@${user.username ?? ""}'),
                           contentPadding: const EdgeInsets.all(0),
-                          trailing: user?.profileImageUrl != null
+                          trailing: user.profileImageUrl != null
                               ? CircleAvatar(
                                   backgroundImage:
-                                      NetworkImage(user?.profileImageUrl ?? ""),
+                                      NetworkImage(user.profileImageUrl ?? ""),
                                   radius: 25,
                                 )
                               : const CircleAvatar(

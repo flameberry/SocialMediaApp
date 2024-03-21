@@ -64,6 +64,7 @@ class _SignUpPageState extends State<SignUpPage> {
         'email': userCredential.user!.email,
         'name': nameController.text,
         'username': usernameController.text,
+        'role': 'Normal',
         'following': [],
         'followers': []
       });

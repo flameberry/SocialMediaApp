@@ -36,7 +36,8 @@ class _EditProfileState extends State<EditProfile> {
           .set({
         'bio': bioController.text,
         'link': linkController.text,
-        'profileImageUrl': profileImageUrl
+        'profileImageUrl': profileImageUrl,
+        'role': isChecked ? "Premium" : "Normal",
       }, SetOptions(merge: true));
 
       widget.panelController.close();
@@ -168,7 +169,7 @@ class _EditProfileState extends State<EditProfile> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text('Private profile'),
+                          const Text('Premium profile'),
                           Switch(
                             value: isChecked,
                             onChanged: (value) {

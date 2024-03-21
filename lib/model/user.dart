@@ -11,6 +11,8 @@ class UserModel {
   final String? link;
   final List following;
   final List followers;
+  final String role;
+
   UserModel({
     required this.id,
     required this.email,
@@ -18,6 +20,7 @@ class UserModel {
     required this.username,
     required this.followers,
     required this.following,
+    required this.role,
     this.profileImageUrl,
     this.bio,
     this.link,
@@ -29,6 +32,7 @@ class UserModel {
       'email': email,
       'name': name,
       'username': username,
+      'role': role,
       'profileImageUrl': profileImageUrl,
       'bio': bio,
       'link': link,
@@ -43,6 +47,7 @@ class UserModel {
         email: map['email'] as String,
         name: map['name'] as String,
         username: map['username'] as String,
+        role: map['role'] as String,
         profileImageUrl: map['profileImageUrl'] != null
             ? map['profileImageUrl'] as String
             : null,

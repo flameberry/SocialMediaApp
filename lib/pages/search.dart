@@ -52,6 +52,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   name: doc['name'],
                   username: doc['username'],
                   email: doc['email'],
+                  role: doc['role'],
                   profileImageUrl: doc['profileImageUrl'],
                   followers: userData['followers'] ?? 0,
                   following: userData['following'] ?? 0,
