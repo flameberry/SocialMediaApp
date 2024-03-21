@@ -4,6 +4,7 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:social_media_app/pages/feed.dart';
 import 'package:social_media_app/pages/post.dart';
 import 'package:social_media_app/pages/profile.dart';
+import 'package:social_media_app/pages/scanner.dart';
 import 'package:social_media_app/pages/search.dart';
 
 class Home extends StatefulWidget {
@@ -24,6 +25,7 @@ class _HomeState extends State<Home> {
     pages = [
       const FeedScreen(),
       const SearchScreen(),
+      const QRScannerScreen(),
       PostScreen(panelController: panelController),
       // const FavoriteScreen(),
       ProfilePage(
@@ -54,7 +56,7 @@ class _HomeState extends State<Home> {
         currentIndex: selectedIndex,
         onTap: (value) {
           setState(() {
-            if (value == 2) {
+            if (value == 3) {
               panelController.isPanelOpen
                   ? panelController.close()
                   : panelController.open();
@@ -66,6 +68,7 @@ class _HomeState extends State<Home> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Feed'),
           BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
+          BottomNavigationBarItem(icon: Icon(Icons.qr_code), label: 'QR Code'),
           BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Joke'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],

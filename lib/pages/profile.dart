@@ -265,7 +265,7 @@ class _ProfilePageState extends State<ProfilePage> {
             },
             child: Container(
               alignment: Alignment.center,
-              width: 110,
+              width: 100,
               height: 30,
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
@@ -277,7 +277,7 @@ class _ProfilePageState extends State<ProfilePage> {
             onTap: () {},
             child: Container(
               alignment: Alignment.center,
-              width: 110,
+              width: 100,
               height: 30,
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
@@ -291,7 +291,7 @@ class _ProfilePageState extends State<ProfilePage> {
             },
             child: Container(
               alignment: Alignment.center,
-              width: 110,
+              width: 100,
               height: 30,
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
@@ -309,7 +309,7 @@ class _ProfilePageState extends State<ProfilePage> {
             onTap: () {},
             child: Container(
               alignment: Alignment.center,
-              width: 170,
+              width: 150,
               height: 30,
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
@@ -321,7 +321,7 @@ class _ProfilePageState extends State<ProfilePage> {
             onTap: () {},
             child: Container(
               alignment: Alignment.center,
-              width: 170,
+              width: 150,
               height: 30,
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),

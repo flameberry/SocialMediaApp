@@ -58,17 +58,6 @@ class _PostScreenState extends State<PostScreen> {
     }
   }
 
-  // void fetchJokes() async {
-  //   // const url = 'https://us-central1-social-media-app-6b0e7.cloudfunctions.net/getJokes';
-  //   const url = 'https://icanhazdadjoke.com/search?limit=5';
-  //   final response = await http.get(Uri.parse(url));
-  //   final body = response.body;
-  //   final json = jsonDecode(body);
-  //   setState(() {
-  //     suggestedJokes = json['results'] as List;
-  //   });
-  // }
-
   Future<List<String>> fetchJokesUsingAPI() async {
     final response = await http
         .get(Uri.parse('https://official-joke-api.appspot.com/random_ten'));
@@ -186,6 +175,7 @@ class _PostScreenState extends State<PostScreen> {
                             return Text('Error: ${snapshot.error}');
                           } else {
                             return ListView.builder(
+                              padding: const EdgeInsets.all(0),
                               shrinkWrap:
                                   true, // this is needed to make ListView work inside a Column
                               itemCount: snapshot.data!.length,
@@ -204,7 +194,10 @@ class _PostScreenState extends State<PostScreen> {
                                             color: Colors.black, width: 2),
                                       ),
                                       child: ListTile(
-                                        title: Text(snapshot.data![index]),
+                                        title: Text(
+                                          snapshot.data![index],
+                                          style: TextStyle(fontSize: 14.0),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -216,7 +209,7 @@ class _PostScreenState extends State<PostScreen> {
                       ),
                       const Text("Joke Suggestions",
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
+                              fontSize: 16, fontWeight: FontWeight.bold)),
                     ],
                   ),
                 )

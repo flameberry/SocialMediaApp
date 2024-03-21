@@ -53,101 +53,97 @@ class _FeedScreenState extends State<FeedScreen> {
             return PostCommentScreen(
                 threadDoc: threadDoc, panelController: panelController);
           },
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  Center(
-                    child: Image.asset(
-                      "assets/images/logo.png",
-                      width: 30,
-                    ),
+          body: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                Center(
+                  child: Image.asset(
+                    "assets/images/logo.png",
+                    width: 30,
                   ),
-                  StreamBuilder(
-                      stream: threadCollection.snapshots(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        } else if (snapshot.hasError) {
-                          Center(
-                            child: Text(' error : ${snapshot.error}'),
-                          );
-                        }
-                        final messages = snapshot.data!.docs;
-
-                        return ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: messages.length,
-                          itemBuilder: (context, index) {
-                            final messageData =
-                                messages[index].data() as Map<String, dynamic>;
-
-                            DateTime timestamp = DateTime.now();
-                            if (messageData.containsKey('timestamp') &&
-                                messageData['timestamp'] != null) {
-                              timestamp =
-                                  (messageData['timestamp'] as Timestamp)
-                                      .toDate();
-                            }
-
-                            return FutureBuilder(
-                                future: getSenderImageUrl(messageData['email']),
-                                builder: (context, snapshot) {
-                                  if (!snapshot.hasData) {
-                                    return const Text('');
-                                  } else if (snapshot.hasError) {
-                                    return Text('Error: ${snapshot.error}');
-                                  }
-                                  final message = Joke(
-                                    id: messageData['id'],
-                                    email: messageData['email'],
-                                    senderName: messageData['sender'],
-                                    senderProfileImageUrl: snapshot.data ?? "",
-                                    message: messageData['message'],
-                                    timestamp: timestamp,
-                                    likes: messageData['likes'] ?? [],
-                                    comments: messageData['comments'] ?? [],
-                                  );
-                                  return Padding(
-                                    padding: const EdgeInsets.only(top: 12.0),
-                                    child: InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => CommentScreen(
-                                              message: message,
-                                              panelController: panelController,
-                                              threadId: messages[index].id,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      child: FBYPost(
-                                        message: message,
-                                        onDisLike: () => dislikeThreadMessage(
-                                            messages[index].id),
-                                        onLike: () => likeThreadMessage(
-                                            messages[index].id),
-                                        onComment: () {
-                                          setState(() {
-                                            threadDoc = messages[index].id;
-                                          });
-                                        },
-                                        panelController: panelController,
-                                      ),
-                                    ),
-                                  );
-                                });
-                          },
+                ),
+                StreamBuilder(
+                    stream: threadCollection.snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
                         );
-                      })
-                ],
-              ),
+                      } else if (snapshot.hasError) {
+                        Center(
+                          child: Text(' error : ${snapshot.error}'),
+                        );
+                      }
+                      final messages = snapshot.data!.docs;
+
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: messages.length,
+                        itemBuilder: (context, index) {
+                          final messageData =
+                              messages[index].data() as Map<String, dynamic>;
+
+                          DateTime timestamp = DateTime.now();
+                          if (messageData.containsKey('timestamp') &&
+                              messageData['timestamp'] != null) {
+                            timestamp = (messageData['timestamp'] as Timestamp)
+                                .toDate();
+                          }
+
+                          return FutureBuilder(
+                              future: getSenderImageUrl(messageData['email']),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) {
+                                  return const Text('');
+                                } else if (snapshot.hasError) {
+                                  return Text('Error: ${snapshot.error}');
+                                }
+                                final message = Joke(
+                                  id: messageData['id'],
+                                  email: messageData['email'],
+                                  senderName: messageData['sender'],
+                                  senderProfileImageUrl: snapshot.data ?? "",
+                                  message: messageData['message'],
+                                  timestamp: timestamp,
+                                  likes: messageData['likes'] ?? [],
+                                  comments: messageData['comments'] ?? [],
+                                );
+                                return Padding(
+                                  padding: const EdgeInsets.only(top: 12.0),
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => CommentScreen(
+                                            message: message,
+                                            panelController: panelController,
+                                            threadId: messages[index].id,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: FBYPost(
+                                      message: message,
+                                      onDisLike: () => dislikeThreadMessage(
+                                          messages[index].id),
+                                      onLike: () =>
+                                          likeThreadMessage(messages[index].id),
+                                      onComment: () {
+                                        setState(() {
+                                          threadDoc = messages[index].id;
+                                        });
+                                      },
+                                      panelController: panelController,
+                                    ),
+                                  ),
+                                );
+                              });
+                        },
+                      );
+                    })
+              ],
             ),
           ),
         ),
