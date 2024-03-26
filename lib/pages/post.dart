@@ -111,7 +111,7 @@ class _PostScreenState extends State<PostScreen> {
                         ),
                       ),
                       const Text(
-                        'New thread',
+                        'New Joke',
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 17),
                       ),

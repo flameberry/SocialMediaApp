@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shake/shake.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:social_media_app/pages/feed.dart';
+import 'package:social_media_app/pages/geolocation.dart';
 import 'package:social_media_app/pages/post.dart';
 import 'package:social_media_app/pages/profile.dart';
 import 'package:social_media_app/pages/scanner.dart';
@@ -26,13 +28,33 @@ class _HomeState extends State<Home> {
       const FeedScreen(),
       const SearchScreen(),
       const QRScannerScreen(),
+      const LocationServices(),
       PostScreen(panelController: panelController),
       // const FavoriteScreen(),
       ProfilePage(
         targetUserEmail: FirebaseAuth.instance.currentUser!.email,
       ),
     ];
+
     super.initState();
+
+    ShakeDetector _ = ShakeDetector.autoStart(
+      onPhoneShake: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+                'You have shaken the phone! Is there some problem with the app?'),
+            showCloseIcon: true,
+            dismissDirection: DismissDirection.down,
+            // duration: Durations.extralong4,
+          ),
+        );
+      },
+      minimumShakeCount: 2,
+      shakeSlopTimeMS: 500,
+      shakeCountResetTime: 3000,
+      shakeThresholdGravity: 2.7,
+    );
   }
 
   @override
@@ -56,7 +78,7 @@ class _HomeState extends State<Home> {
         currentIndex: selectedIndex,
         onTap: (value) {
           setState(() {
-            if (value == 3) {
+            if (value == 4) {
               panelController.isPanelOpen
                   ? panelController.close()
                   : panelController.open();
@@ -69,6 +91,8 @@ class _HomeState extends State<Home> {
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Feed'),
           BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
           BottomNavigationBarItem(icon: Icon(Icons.qr_code), label: 'QR Code'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.location_pin), label: 'Location'),
           BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Joke'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
